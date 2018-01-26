@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<project name="lang" default="parser">
+
+	<!-- ANTLR version -->
+	<property name="antlr.version" value="4.5" />
+
+	<!-- VarLang parser -->
+	<target name="varlang-check-parser">
+		<condition property="varlang.parser.uptodate">
+			<and>
+				<uptodate srcfile="src/varlang/VarLang.g" targetfile="src/varlang/parser/VarLangParser.java" />
+				<uptodate srcfile="src/varlang/VarLang.g" targetfile="src/varlang/parser/VarLangLexer.java" />
+				<uptodate srcfile="src/varlang/VarLang.g" targetfile="src/varlang/parser/VarLangListener.java" />
+			</and>
+		</condition>
+	</target>
+
+	<target name="varlang" depends="varlang-check-parser" unless="varlang.parser.uptodate">
+		<java jar="lib/antlr-${antlr.version}-complete.jar" dir="src/varlang/" fork="true" failonerror="true">
+			<arg value="-o" />
+			<arg value="parser/" />
+			<arg value="-no-listener" />
+			<arg value="-package" />
+			<arg value="varlang.parser; import static varlang.AST.*" />
+			<arg value="VarLang.g" />
+		</java>
+	</target>
+
+	<target name="parser" depends="varlang" >
+	</target>
+	
+</project>

@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.ArrayList;
 
 import varlang.AST.AddExp;
+import varlang.AST.DecExp;
 import varlang.AST.NumExp;
 import varlang.AST.DivExp;
+import varlang.AST.LeteExp;
 import varlang.AST.MultExp;
 import varlang.AST.Program;
 import varlang.AST.SubExp;
@@ -113,6 +115,28 @@ public class Evaluator implements Visitor<Value> {
 			new_env = new ExtendEnv(new_env, names.get(i), values.get(i));
 
 		return (Value) e.body().accept(this, new_env);		
+	}
+
+	@Override
+	public Value visit(DecExp e, Env env) {
+		
+		return env.get(e.name());
+	}
+
+	@Override
+	public Value visit(LeteExp e, Env env) {
+		List<String> names = e.names();
+		List<Exp> value_exps = e.value_exps();
+		List<Value> values = new ArrayList<Value>(value_exps.size());
+		
+		for(Exp exp : value_exps) 
+			values.add((Value)exp.accept(this, env));
+		
+		Env new_env = env;
+		for (int i = 0; i < names.size(); i++)
+			new_env = new ExtendEnv(new_env, names.get(i), values.get(i));
+
+		return (Value) e.body().accept(this, new_env);	
 	}	
 	
 }

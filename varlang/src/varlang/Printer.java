@@ -2,6 +2,9 @@ package varlang;
 
 import java.util.List;
 
+import varlang.AST.DecExp;
+import varlang.AST.LeteExp;
+
 public class Printer {
 	public void print(Value v) {
 		System.out.println(v.toString());
@@ -53,6 +56,28 @@ public class Printer {
 		}
 		
 		public String visit(AST.LetExp e, Env env) {
+			String result = "(let (";
+			List<String> names = e.names();
+			List<AST.Exp> value_exps = e.value_exps();
+			int num_decls = names.size();
+			for (int i = 0; i < num_decls ; i++) {
+				result += " (";
+				result += names.get(i) + " ";
+				result += value_exps.get(i).accept(this, env) + ")";
+			}
+			result += ") ";
+			result += e.body().accept(this, env) + " ";
+			return result + ")";
+		}
+
+		@Override
+		public String visit(DecExp e, Env env) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public String visit(LeteExp e, Env env) {
 			String result = "(let (";
 			List<String> names = e.names();
 			List<AST.Exp> value_exps = e.value_exps();

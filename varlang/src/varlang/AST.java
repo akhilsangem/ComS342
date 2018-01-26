@@ -71,6 +71,34 @@ public interface AST {
 			return true;
 		}
 	}
+	
+	public static class DecExp extends VarExp {
+		String _name;
+
+		public DecExp(String name) {
+			super(name);
+		}
+
+		public String name() {
+			return _name;
+		}
+		
+		public Object accept(Visitor visitor, Env env) {
+			return visitor.visit(this, env);
+		}
+		
+		public boolean isFree(String s) {
+			Env checkFree = new EmptyEnv();
+			try {
+				checkFree.get(s);
+			} catch (Exception e) {
+				return false;
+			}
+			return true;
+		}
+		
+	}
+	
 
 	public static class NumExp extends Exp {
 		double _val;
@@ -317,6 +345,38 @@ public interface AST {
 
 	}
 	
+	public static class LeteExp extends Exp {
+		List<String> _names;
+		List<Exp> _value_exps; 
+		Exp _body;
+		
+		public LeteExp(List<String> names, List<Exp> value_exps, Exp body) {
+			_names = names;
+			_value_exps = value_exps;
+			_body = body;
+		}
+		
+		public Object accept(Visitor visitor, Env env) {
+			return visitor.visit(this, env);
+		}
+		
+		public List<String> names() { return _names; }
+		
+		public List<Exp> value_exps() { return _value_exps; }
+
+		public Exp body() { return _body; }
+		
+		public boolean isFree(String s) {
+			Env checkFree = new EmptyEnv();
+			try {
+				checkFree.get(s);
+			} catch (Exception e) {
+				return false;
+			}
+			return true;
+		}
+	}
+	
 	public interface Visitor <T> {
 		// This interface should contain a signature for each concrete AST node.
 		public T visit(AST.AddExp e, Env env);
@@ -327,5 +387,7 @@ public interface AST {
 		public T visit(AST.SubExp e, Env env);
 		public T visit(AST.VarExp e, Env env);
 		public T visit(AST.LetExp e, Env env); // New for the varlang
+		public T visit(AST.DecExp e, Env env);
+		public T visit(AST.LeteExp e, Env env);
 	}	
 }

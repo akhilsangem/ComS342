@@ -12,6 +12,8 @@ grammar VarLang;
         | m=multexp { $ast = $m.ast; }
         | d=divexp { $ast = $d.ast; }
         | l=letexp { $ast = $l.ast; }
+        | le=leteexp { $ast = $le.ast; }
+        | de=decexp { $ast = $de.ast; }
         ;
 
  numexp returns [NumExp ast]:
@@ -64,6 +66,10 @@ grammar VarLang;
  		id=Identifier { $ast = new VarExp($id.text); }
  		;
 
+ decexp returns [DecExp ast]: 
+ 		id=Identifier { $ast = new DecExp($id.text); }
+ 		;
+ 		
  letexp  returns [LetExp ast] 
         locals [ArrayList<String> names, ArrayList<Exp> value_exps]
  		@init { $names = new ArrayList<String>(); $value_exps = new ArrayList<Exp>(); } :
@@ -72,11 +78,21 @@ grammar VarLang;
  			body=exp 
  			')' { $ast = new LetExp($names, $value_exps, $body.ast); }
  		;
+ 
+ leteexp  returns [LeteExp ast] 
+        locals [ArrayList<String> names, ArrayList<Exp> value_exps]
+ 		@init { $names = new ArrayList<String>(); $value_exps = new ArrayList<Exp>(); } :
+ 		'(' Lete 
+ 			'(' ( '(' id=Identifier e=exp ')' { $names.add($id.text); $value_exps.add($e.ast); } )  ')'
+ 			body=exp exp 
+ 			')' { $ast = new LeteExp($names, $value_exps, $body.ast); }
+ 		;
 
  // Lexical Specification of this Programming Language
  //  - lexical specification rules start with uppercase
  
  Let : 'let' ;
+ Lete : 'lete' ;
  Dot : '.' ;
 
  Number : DIGIT+ ;

@@ -3,6 +3,8 @@ package varlang;
 import java.util.ArrayList;
 import java.util.List;
 
+import varlang.Env.EmptyEnv;
+
 /**
  * This class hierarchy represents expressions in the abstract syntax tree
  * manipulated by this interpreter.
@@ -29,6 +31,16 @@ public interface AST {
 		public Object accept(Visitor visitor, Env env) {
 			return visitor.visit(this, env);
 		}
+		
+		public boolean isFree(String s) {
+			Env checkFree = new EmptyEnv();
+			try {
+				checkFree.get(s);
+			} catch (Exception e) {
+				return false;
+			}
+			return true;
+		}
 	}
 	public static abstract class Exp extends ASTNode {
 
@@ -48,6 +60,16 @@ public interface AST {
 		public Object accept(Visitor visitor, Env env) {
 			return visitor.visit(this, env);
 		}
+		
+		public boolean isFree(String s) {
+			Env checkFree = new EmptyEnv();
+			try {
+				checkFree.get(s);
+			} catch (Exception e) {
+				return false;
+			}
+			return true;
+		}
 	}
 
 	public static class NumExp extends Exp {
@@ -63,6 +85,16 @@ public interface AST {
 		
 		public Object accept(Visitor visitor, Env env) {
 			return visitor.visit(this, env);
+		}
+		
+		public boolean isFree(String s) {
+			Env checkFree = new EmptyEnv();
+			try {
+				checkFree.get(s);
+			} catch (Exception e) {
+				return false;
+			}
+			return true;
 		}
 	}
 
@@ -134,6 +166,16 @@ public interface AST {
 		public Object accept(Visitor visitor, Env env) {
 			return visitor.visit(this, env);
 		}
+		
+		public boolean isFree(String s) {
+			Env checkFree = new EmptyEnv();
+			try {
+				checkFree.get(s);
+			} catch (Exception e) {
+				return false;
+			}
+			return true;
+		}
 	}
 
 	public static class SubExp extends CompoundArithExp {
@@ -157,6 +199,17 @@ public interface AST {
 		public Object accept(Visitor visitor, Env env) {
 			return visitor.visit(this, env);
 		}
+		
+		public boolean isFree(String s) {
+			Env checkFree = new EmptyEnv();
+			try {
+				checkFree.get(s);
+			} catch (Exception e) {
+				return false;
+			}
+			return true;
+		}
+		
 	}
 
 	public static class DivExp extends CompoundArithExp {
@@ -179,6 +232,16 @@ public interface AST {
 		public Object accept(Visitor visitor, Env env) {
 			return visitor.visit(this, env);
 		}
+		
+		public boolean isFree(String s) {
+			Env checkFree = new EmptyEnv();
+			try {
+				checkFree.get(s);
+			} catch (Exception e) {
+				return false;
+			}
+			return true;
+		}
 	}
 
 	public static class MultExp extends CompoundArithExp {
@@ -200,6 +263,16 @@ public interface AST {
 		
 		public Object accept(Visitor visitor, Env env) {
 			return visitor.visit(this, env);
+		}
+		
+		public boolean isFree(String s) {
+			Env checkFree = new EmptyEnv();
+			try {
+				checkFree.get(s);
+			} catch (Exception e) {
+				return false;
+			}
+			return true;
 		}
 	}
 	
@@ -231,6 +304,16 @@ public interface AST {
 		public List<Exp> value_exps() { return _value_exps; }
 
 		public Exp body() { return _body; }
+		
+		public boolean isFree(String s) {
+			Env checkFree = new EmptyEnv();
+			try {
+				checkFree.get(s);
+			} catch (Exception e) {
+				return false;
+			}
+			return true;
+		}
 
 	}
 	
